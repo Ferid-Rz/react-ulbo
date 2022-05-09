@@ -1,4 +1,4 @@
-import  React, {useMemo, useState, useRef} from "react";
+import React, {useMemo, useState, useRef, useEffect} from "react";
 import PostList from "./components/PostList";
 import MyInput from "./components/UI/input/MyInput";
 import MyButton from "./components/UI/button/MyButton";
@@ -17,6 +17,9 @@ function App() {
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
 
+    useEffect(() =>{
+        fetchPosts()
+    }, [])
     async function fetchPosts(){
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
         setPosts(response.data)
@@ -31,7 +34,6 @@ function App() {
 
   return (
     <div className="App">
-        <button onClick={fetchPosts}>ffff</button>
         <MyButton style={{marginTop: 30}} onClick={()=> setModal(true)}>
             Create Post
         </MyButton>
