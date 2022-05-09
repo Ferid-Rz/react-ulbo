@@ -5,6 +5,7 @@ import MyButton from "./components/UI/button/MyButton";
 import './styles/App.css'
 import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MySelect";
+import PostFilter from "./components/PostFilter";
 
 
 function App() {
@@ -13,22 +14,20 @@ function App() {
        {id: 2,title: 'bb', body: '22'},
        {id: 3,title: 'cc', body: '11'},
    ])
-    const [selectedSort, setSelectedSort] = useState('')
-    const [searchQuery, setSearchQuery] = useState('')
-
+    const [filter, setFilter] = useState({sort: '', query: ''})
 
     // const sortedPosts = getSortedPosts()
     const sortedPosts = useMemo(() => {
         console.log('aue')
-        if(selectedSort){
-            return [...posts].sort( (a,b) => a[selectedSort].localeCompare(b[selectedSort]))
+        if(filter.sort){
+            return [...posts].sort( (a,b) => a[filter.sort].localeCompare(b[filter.sort]))
         }
         return posts
-    }, [selectedSort, posts])
+    }, [filter.sort, posts])
 
     const sortedAndSearchedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    }, [searchQuery, sortedPosts])
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
+    }, [filter.query, sortedPosts])
 
     const createPost = (newPost) =>{
         setPosts([...posts, newPost])
@@ -36,31 +35,13 @@ function App() {
     const removePost = (post) => {
        setPosts(posts.filter(p => p.id !== post.id ))
     }
-    const sortPosts = (sort) =>{
-        setSelectedSort(sort)
-    }
 
   return (
     <div className="App">
         <PostForm create={createPost}/>
         <hr style={{margin: '15px 0'}}/>
-            <div>
+        <PostFilter filter={filter} setFilter={setFilter} />
 
-                <MyInput
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="Searching..."
-                />
-                <MySelect
-                    value={selectedSort}
-                    onChange={sortPosts}
-                    defaultValue="Sorting"
-                    options={[
-                        {value: 'title', name : 'By name'},
-                        {value: 'body', name : 'By desc'}
-                    ]}
-                />
-            </div>
         {sortedAndSearchedPosts .length !== 0
             ? <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"list of posts: 1"}/>
             : <h1 style={{textAlign: 'center'}}>Posts not found</h1>
