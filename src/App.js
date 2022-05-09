@@ -42,10 +42,7 @@ function App() {
         <hr style={{margin: '15px 0'}}/>
         <PostFilter filter={filter} setFilter={setFilter} />
 
-        {sortedAndSearchedPosts .length !== 0
-            ? <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"list of posts: 1"}/>
-            : <h1 style={{textAlign: 'center'}}>Posts not found</h1>
-        }
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"list of posts: 1"}/>
 
     </div>
   );
